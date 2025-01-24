@@ -103,6 +103,7 @@ function generateDayContainers(duration, startDate, itinerary_days = []) {
   });
 }
 
+let endTimes = [];
 // Add a new time slot dynamically
 function addTimeSlot(dayNumber, startTime = "", endTime = "", activity = "") {
   const timeSlotsContainer = document.getElementById(
@@ -110,6 +111,7 @@ function addTimeSlot(dayNumber, startTime = "", endTime = "", activity = "") {
   );
   const timeSlotDiv = document.createElement("div");
   timeSlotDiv.classList.add("time-slot");
+  timeSlotDiv.dataset.day = dayNumber;
 
   const uniqueId = Date.now(); // Unique ID for delete functionality
   timeSlotDiv.setAttribute("data-id", uniqueId);
@@ -117,7 +119,7 @@ function addTimeSlot(dayNumber, startTime = "", endTime = "", activity = "") {
   timeSlotDiv.innerHTML = ` 
            <div class="form-group time-slot-row">
                 <input type="time" name="time_range[${dayNumber}][]" required value="${startTime}">
-                <input type="time" name="time_range[${dayNumber}][]" required value="${endTime}">
+                <input type="time" name="time_range[${dayNumber}][]" required value="${endTime}" disabled>
                 <input type="text" name="activity[${dayNumber}][]" placeholder="Activity..." required value="${activity}">
                 <button type="button" class="delete-time-btn" data-id="${uniqueId}">
                     <i class="fas fa-trash"></i>
@@ -132,12 +134,77 @@ function addTimeSlot(dayNumber, startTime = "", endTime = "", activity = "") {
     .addEventListener("click", function () {
       deleteTimeSlot(uniqueId);
     });
+
+  // Add event listener to validate time inputs
+  const startTimeInput = timeSlotDiv.querySelector(
+    "input[type='time']:nth-child(1)"
+  );
+  const endTimeInput = timeSlotDiv.querySelector(
+    "input[type='time']:nth-child(2)"
+  );
+
+  // Event listener to check if startTime is earlier than endTime
+  startTimeInput.addEventListener("change", validateTime);
+  endTimeInput.addEventListener("change", validateTime);
+
+  function validateTime() {
+    const startTimeValue = startTimeInput.value;
+    const endTimeValue = endTimeInput.value;
+
+    if (startTimeValue && !endTimeValue) {
+      endTimeInput.disabled = false;
+    }
+
+    if (endTimes.length && startTimeValue && !endTimeValue) {
+      const startTimeDate = new Date(`1970-01-01T${startTimeValue}:00`);
+      const lastTimeDate = new Date(`1970-01-01T${endTimes[dayNumber - 1]}:00`);
+
+      // If it's not the first day, check that the startTime is not earlier than lastEndTime
+      if (startTimeDate < lastTimeDate) {
+        alert(`Start time cannot be earlier than ${endTimes[dayNumber - 1]}`);
+        startTimeInput.value = "";
+        endTimeInput.disabled = true;
+        return; // Prevent adding the time slot
+      }
+    }
+
+    if (startTimeValue && endTimeValue) {
+      const startTimeDate = new Date(`1970-01-01T${startTimeValue}:00`);
+      const endTimeDate = new Date(`1970-01-01T${endTimeValue}:00`);
+
+      if (startTimeDate >= endTimeDate) {
+        alert("Start time must be earlier than end time.");
+        endTimeInput.value = "";
+        // Reset the end time if validation fails
+        endTimeInput.setCustomValidity(
+          "Start time must be earlier than end time."
+        );
+      } else {
+        endTimeInput.setCustomValidity(""); // Clear any previous validation messages
+        if (!endTimes.length) {
+          endTimes.push(endTimeValue);
+        } else {
+          endTimes[dayNumber - 1] = endTimeValue;
+        }
+      }
+    }
+  }
 }
 
 // Delete a specific time slot
 function deleteTimeSlot(uniqueId) {
   const timeSlot = document.querySelector(`.time-slot[data-id="${uniqueId}"]`);
   if (timeSlot) {
+    if (endTimes.length) {
+      const previous = timeSlot.previousElementSibling;
+      if (previous) {
+        endTimes[previous.dataset.day - 1] = previous.querySelector(
+          "input[type='time']:nth-child(2)"
+        ).value;
+      } else if (endTimes[timeSlot.dataset.day - 1]) {
+        endTimes.splice(timeSlot.dataset.day - 1, 1);
+      }
+    }
     timeSlot.remove();
   }
 }

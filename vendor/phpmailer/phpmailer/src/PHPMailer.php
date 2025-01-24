@@ -279,7 +279,7 @@ class PHPMailer
      *
      * @var string
      */
-    public $Host = 'localhost';
+    public $Host = "localhost";
 
     /**
      * The default SMTP server port.
@@ -2160,7 +2160,7 @@ class PHPMailer
         $this->smtp->setDebugOutput($this->Debugoutput);
         $this->smtp->setVerp($this->do_verp);
         if ($this->Host === null) {
-            $this->Host = 'localhost';
+            $this->Host = "localhost";
         }
         $hosts = explode(';', $this->Host);
         $lastexception = null;
@@ -2235,7 +2235,7 @@ class PHPMailer
                     //* the server offers STARTTLS
                     if (
                         $this->SMTPAutoTLS &&
-                        $this->Host !== 'localhost' &&
+                        $this->Host !== "localhost" &&
                         $sslext &&
                         $secure !== 'ssl' &&
                         $this->smtp->getServerExt('STARTTLS')

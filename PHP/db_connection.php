@@ -2,10 +2,10 @@
 // db_connection.php
 $servername = "localhost";
 $username = "root"; 
-$password = "";     
+$password = '';  
 $dbname = "bondvoyage_db";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, 3306);
 
 // Check connection
 if ($conn->connect_error) {

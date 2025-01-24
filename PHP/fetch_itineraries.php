@@ -1,6 +1,6 @@
 <?php
 
-$host = 'localhost'; // Database host
+$host = "localhost"; // Database host
 $dbname = 'bondvoyage_db'; // Database name
 $username = 'root'; // Your database username
 $password = ''; // Your database password
