@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: bondvoyage_db
 -- ------------------------------------------------------
--- Server version	8.4.3
+-- Server version	8.4.4
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `admin_users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin_users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` char(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
@@ -50,14 +50,14 @@ DROP TABLE IF EXISTS `create_travel`;
 CREATE TABLE `create_travel` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `travel_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `share_code` varchar(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `travel_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `share_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `share_code` (`share_code`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `create_travel_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `create_travel` (
 --
 
 /*!40000 ALTER TABLE `create_travel` DISABLE KEYS */;
-INSERT INTO `create_travel` VALUES (1,1,'Sagada','AG9XMKW0','2025-01-15 12:17:32'),(2,1,'HEY','NWS0RSEP','2025-01-18 16:10:23'),(3,1,'sadasda','5BBQFZBC','2025-01-18 23:28:55');
+INSERT INTO `create_travel` VALUES (5,1,'ASDASDDA','990RAJW0','2025-01-24 01:50:29');
 /*!40000 ALTER TABLE `create_travel` ENABLE KEYS */;
 
 --
@@ -78,9 +78,9 @@ DROP TABLE IF EXISTS `customized_intineraries`;
 CREATE TABLE `customized_intineraries` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `client_name` varchar(255) NOT NULL,
-  `destination` varchar(255) NOT NULL,
-  `lodging` text,
+  `client_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `destination` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lodging` text COLLATE utf8mb4_general_ci,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
   `travel_id` int NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE `customized_intinerary_days` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `customized_initerary_id` int NOT NULL,
-  `activity` varchar(255) DEFAULT NULL,
+  `activity` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
   `day_number` int NOT NULL,
@@ -133,9 +133,9 @@ DROP TABLE IF EXISTS `feedback`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `feedback` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `feedback` text COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `feedback` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `submitted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -158,10 +158,10 @@ DROP TABLE IF EXISTS `itineraries`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `itineraries` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `destination` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `destination` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `duration_days` int DEFAULT NULL,
   `duration_nights` int DEFAULT NULL,
-  `lodging` text COLLATE utf8mb4_general_ci,
+  `lodging` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -187,7 +187,7 @@ CREATE TABLE `itinerary_days` (
   `day_number` int NOT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
-  `activity` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `activity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `itinerary_id` (`itinerary_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -211,7 +211,7 @@ DROP TABLE IF EXISTS `place_images`;
 CREATE TABLE `place_images` (
   `id` int NOT NULL AUTO_INCREMENT,
   `place_id` int NOT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `place_id` (`place_id`),
   CONSTRAINT `place_images_ibfk_1` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE
@@ -235,11 +235,11 @@ DROP TABLE IF EXISTS `places`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `places` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `destination` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `place_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `location` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `activities` text COLLATE utf8mb4_general_ci NOT NULL,
+  `destination` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `place_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `activities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -268,7 +268,7 @@ CREATE TABLE `travel_collaborators` (
   PRIMARY KEY (`id`),
   KEY `travel_id` (`travel_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `travel_collaborators_ibfk_1` FOREIGN KEY (`travel_id`) REFERENCES `create_travel` (`id`),
+  CONSTRAINT `travel_collaborators_ibfk_1` FOREIGN KEY (`travel_id`) REFERENCES `create_travel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `travel_collaborators_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -278,7 +278,6 @@ CREATE TABLE `travel_collaborators` (
 --
 
 /*!40000 ALTER TABLE `travel_collaborators` DISABLE KEYS */;
-INSERT INTO `travel_collaborators` VALUES (1,1,2,'2025-01-17 21:32:22');
 /*!40000 ALTER TABLE `travel_collaborators` ENABLE KEYS */;
 
 --
@@ -290,18 +289,18 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mobile` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `birthday` date NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_question_1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_answer_1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_question_2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_answer_2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_question_3` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `security_answer_3` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_question_1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_answer_1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_question_2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_answer_2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_question_3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `security_answer_3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
@@ -329,4 +328,4 @@ INSERT INTO `users` VALUES (1,'Virginia Rose','Dichoso','virginiarosedichoso@gma
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-20  2:57:22
+-- Dump completed on 2025-01-24 14:51:14
